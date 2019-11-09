@@ -1,3 +1,4 @@
+// Initialized Firebase
 var firebaseConfig = {
   apiKey: "AIzaSyCgVs7nt2jvnJDymLCc03teYuE3-AvN8xI",
   authDomain: "test-project-utsa.firebaseapp.com",
@@ -9,15 +10,45 @@ var firebaseConfig = {
   measurementId: "G-HMYCEMW4KE"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
+// Button to add new trains
+$("#add-train-btn").on("click", function(event) {
+  event.preventDefault();
+  var trainName = $("#train-name-input")
+    .val()
+    .trim();
+  var trainDest = $("#destination-input")
+    .val()
+    .trim();
+  var firstTrain = moment(
+    $("#time-input")
+      .val()
+      .trim(),
+    "HH:mm"
+  ).format("HH:mm");
+  var trainFreq = $("#frequency-input")
+    .val()
+    .trim();
 
-$("#add-train-btn").on("click",function(event){
-    event.preventDefault();
-    var trainName = $("#train-name-input").val().trim();
-    var trainDest = $("#destination-input").val().trim();
-    var firstTrain = moment($("#start-input").val().trim(), "MM/DD/YYYY").format("X");
-    var trainFreq = $("#rate-input").val().trim();
+  // Created local temporary object to hold the data
+  var newTrain = {
+    name: trainName,
+    destination: trainDest,
+    start: firstTrain,
+    freq: trainFreq
+  };
+  database.ref().push(newTrain);
+
+  // Logs data entered to the console
+  console.log(newTrain.name);
+  console.log(newTrain.destination);
+  console.log(newTrain.start);
+  console.log(newTrain.freq);
+
+  //   $("#train-name-input").val("");
+  //   $("#destination-input").val("");
+  //   $("#time-input").val("");x
+  //   $("#rate-input").val("");
 });
