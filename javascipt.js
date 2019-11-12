@@ -1,15 +1,14 @@
 // Initialized Firebase
 var firebaseConfig = {
-  apiKey: "AIzaSyCgVs7nt2jvnJDymLCc03teYuE3-AvN8xI",
-  authDomain: "test-project-utsa.firebaseapp.com",
-  databaseURL: "https://test-project-utsa.firebaseio.com",
-  projectId: "test-project-utsa",
-  storageBucket: "test-project-utsa.appspot.com",
-  messagingSenderId: "392920990156",
-  appId: "1:392920990156:web:d9e0705f24fb1032db1d69",
-  measurementId: "G-HMYCEMW4KE"
+  apiKey: "AIzaSyBem7aYPaG3WfP5gEA3yAcyRm9zk358x3k",
+  authDomain: "train-scheduler-9ce14.firebaseapp.com",
+  databaseURL: "https://train-scheduler-9ce14.firebaseio.com",
+  projectId: "train-scheduler-9ce14",
+  storageBucket: "train-scheduler-9ce14.appspot.com",
+  messagingSenderId: "1029895528639",
+  appId: "1:1029895528639:web:f54b5f68e5e535aeaee60a",
+  measurementId: "G-0M98RCW99R"
 };
-
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
@@ -41,14 +40,50 @@ $("#add-train-btn").on("click", function(event) {
   };
   database.ref().push(newTrain);
 
-  // Logs data entered to the console
+  // Supposed to log the data in the console
   console.log(newTrain.name);
   console.log(newTrain.destination);
   console.log(newTrain.start);
   console.log(newTrain.freq);
 
-  //   $("#train-name-input").val("");
-  //   $("#destination-input").val("");
-  //   $("#time-input").val("");x
-  //   $("#rate-input").val("");
+  //   Clears the text box
+  $("#train-name-input").val("");
+  $("#destination-input").val("");
+  $("#time-input").val("");
+  x;
+  $("#frequency-input").val("");
 });
+
+// Created firebase event listener for added trains
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val());
+
+  
+
+    var trainName = childSnapshot.val().train;
+    var destination = childSnapshot.val().trainDest;
+    var firstTrain = childSnapshot.val().trainArrival;
+    var frequency = childSnapshot.val().everyMin;
+
+
+
+    var trainTime = moment(firstTrain).format("hh:mm");
+
+    var difference = moment().diff(moment(trainTime), "minutes");
+
+    var firstTrain = difference % frequency;
+    console.log(trainRemain);
+
+
+    var minRemain = frequency - firstTrain;
+    console.log(minRemain);
+
+
+    var nextArrival = moment().add(minRemain, "minutes").format('hh:mm');
+    console.log(nextArrival);
+
+    $("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
+        frequency + "</td><td>" + nextArrival + "</td><td>" + minRemain + "</td></tr>");
+
+});
+
